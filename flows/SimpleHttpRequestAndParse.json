@@ -1,0 +1,199 @@
+[
+    {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "Parse Data",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "3cc11d24.ff01a2",
+        "type": "comment",
+        "z": "f6f2187d.f17ca8",
+        "name": "WARNING: please check you have started this container with a volume that is mounted to /data\\n otherwise any flow changes are lost when you redeploy or upgrade the container\\n (e.g. upgrade to a more recent node-red docker image).\\n  If you are using named volumes you can ignore this warning.\\n Double click or see info side panel to learn how to start Node-RED in Docker to save your work",
+        "info": "\nTo start docker with a bind mount volume (-v option), for example:\n\n```\ndocker run -it -p 1880:1880 -v /home/user/node_red_data:/data --name mynodered nodered/node-red\n```\n\nwhere `/home/user/node_red_data` is a directory on your host machine where you want to store your flows.\n\nIf you do not do this then you can experiment and redploy flows, but if you restart or upgrade the container the flows will be disconnected and lost. \n\nThey will still exist in a hidden data volume, which can be recovered using standard docker techniques, but that is much more complex than just starting with a named volume as described above.",
+        "x": 350,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "ac38fbeb9ff924cb",
+        "type": "http request",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "host.docker.internal:4004/drone-guidance/guidance",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 550,
+        "y": 480,
+        "wires": [
+            [
+                "9d800330a8b1621d"
+            ]
+        ]
+    },
+    {
+        "id": "6076650f2c88eb9e",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 300,
+        "y": 480,
+        "wires": [
+            [
+                "ac38fbeb9ff924cb"
+            ]
+        ]
+    },
+    {
+        "id": "7644f5908f805aed",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 600,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "9d800330a8b1621d",
+        "type": "json",
+        "z": "f6f2187d.f17ca8",
+        "name": "Convert to JS Object",
+        "property": "payload.value",
+        "action": "obj",
+        "pretty": false,
+        "x": 300,
+        "y": 660,
+        "wires": [
+            [
+                "a0d2c02c0a963adc"
+            ]
+        ]
+    },
+    {
+        "id": "0a868813d0b92e12",
+        "type": "split",
+        "z": "f6f2187d.f17ca8",
+        "name": "Split Array",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "key",
+        "x": 390,
+        "y": 900,
+        "wires": [
+            [
+                "7644f5908f805aed"
+            ]
+        ]
+    },
+    {
+        "id": "e16c5b46244ad522",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "a0d2c02c0a963adc",
+        "type": "change",
+        "z": "f6f2187d.f17ca8",
+        "name": "Extract Value Array",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.value",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 530,
+        "y": 660,
+        "wires": [
+            [
+                "e16c5b46244ad522",
+                "0a868813d0b92e12"
+            ]
+        ]
+    },
+    {
+        "id": "53247f4f931cea27",
+        "type": "comment",
+        "z": "f6f2187d.f17ca8",
+        "name": "Commands are sent individually here",
+        "info": "",
+        "x": 530,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "f99b6c67c0fc5d0c",
+        "type": "comment",
+        "z": "f6f2187d.f17ca8",
+        "name": "Send Request to Server",
+        "info": "",
+        "x": 580,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "d9b5ac57d307f5fa",
+        "type": "comment",
+        "z": "f6f2187d.f17ca8",
+        "name": "Extract Commands as Array",
+        "info": "",
+        "x": 560,
+        "y": 600,
+        "wires": []
+    }
+]
