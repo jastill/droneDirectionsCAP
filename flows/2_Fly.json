@@ -1,0 +1,279 @@
+[
+    {
+        "id": "f9ddf51ef2df073f",
+        "type": "tab",
+        "label": "2_Fly",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "bf9ed2dd518dd808",
+        "type": "udp out",
+        "z": "f9ddf51ef2df073f",
+        "name": "",
+        "addr": "192.168.10.1",
+        "iface": "",
+        "port": "8889",
+        "ipv": "udp4",
+        "outport": "64000",
+        "base64": false,
+        "multicast": "false",
+        "x": 950,
+        "y": 1500,
+        "wires": []
+    },
+    {
+        "id": "c30bea36f4fb6bea",
+        "type": "debug",
+        "z": "f9ddf51ef2df073f",
+        "name": "Debug Msg Payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 1260,
+        "wires": []
+    },
+    {
+        "id": "3bbd9927992e2871",
+        "type": "http request",
+        "z": "f9ddf51ef2df073f",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://host.docker.internal:4004/drone-guidance/guidance?$orderby=step%20asc",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 790,
+        "y": 660,
+        "wires": [
+            [
+                "7bf9b9a383778442"
+            ]
+        ]
+    },
+    {
+        "id": "d25a914b5d4f6e56",
+        "type": "inject",
+        "z": "f9ddf51ef2df073f",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 540,
+        "y": 660,
+        "wires": [
+            [
+                "3bbd9927992e2871"
+            ]
+        ]
+    },
+    {
+        "id": "a1a21d4402f03e5a",
+        "type": "debug",
+        "z": "f9ddf51ef2df073f",
+        "name": "Debug Commands",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1030,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "7bf9b9a383778442",
+        "type": "json",
+        "z": "f9ddf51ef2df073f",
+        "name": "Convert to JS Object",
+        "property": "payload.value",
+        "action": "obj",
+        "pretty": false,
+        "x": 540,
+        "y": 840,
+        "wires": [
+            [
+                "6e0dfc875e7eee85"
+            ]
+        ]
+    },
+    {
+        "id": "0c5554e6d2add8b6",
+        "type": "split",
+        "z": "f9ddf51ef2df073f",
+        "name": "Split Commands",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "key",
+        "x": 650,
+        "y": 1080,
+        "wires": [
+            [
+                "83fdc80fc4c6a99b"
+            ]
+        ]
+    },
+    {
+        "id": "c413bee61bf97250",
+        "type": "debug",
+        "z": "f9ddf51ef2df073f",
+        "name": "Debug Value",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1010,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "6e0dfc875e7eee85",
+        "type": "change",
+        "z": "f9ddf51ef2df073f",
+        "name": "Extract Value Array",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.value",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 840,
+        "wires": [
+            [
+                "c413bee61bf97250",
+                "0c5554e6d2add8b6"
+            ]
+        ]
+    },
+    {
+        "id": "e5ee5c8c4da724b5",
+        "type": "comment",
+        "z": "f9ddf51ef2df073f",
+        "name": "Commands are sent individually here",
+        "info": "There needs to be a delay between the commands",
+        "x": 770,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "eb888e1a862a56ec",
+        "type": "comment",
+        "z": "f9ddf51ef2df073f",
+        "name": "Send Request to Server",
+        "info": "",
+        "x": 820,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "9755e41b4bc443da",
+        "type": "comment",
+        "z": "f9ddf51ef2df073f",
+        "name": "Extract Commands as Array",
+        "info": "",
+        "x": 800,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "9c579285d1e49cb8",
+        "type": "link in",
+        "z": "f9ddf51ef2df073f",
+        "name": "link in 1",
+        "links": [
+            "3339492b68c84e97"
+        ],
+        "x": 725,
+        "y": 1420,
+        "wires": [
+            [
+                "c30bea36f4fb6bea",
+                "bf9ed2dd518dd808"
+            ]
+        ]
+    },
+    {
+        "id": "3339492b68c84e97",
+        "type": "link out",
+        "z": "f9ddf51ef2df073f",
+        "name": "link out 1",
+        "mode": "link",
+        "links": [
+            "9c579285d1e49cb8"
+        ],
+        "x": 635,
+        "y": 1220,
+        "wires": []
+    },
+    {
+        "id": "83fdc80fc4c6a99b",
+        "type": "delay",
+        "z": "f9ddf51ef2df073f",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "5",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 860,
+        "y": 1180,
+        "wires": [
+            [
+                "3339492b68c84e97",
+                "a1a21d4402f03e5a"
+            ]
+        ]
+    }
+]
