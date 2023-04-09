@@ -8,8 +8,9 @@ These are not normal athletes, they don't race to win, they race to flip, jump a
 
 Create the delivery map for the autonomous drone and land as close as possible to the finish area to get some gnarly applause. Extra points are earned for style!
 
+### Operational values
 
-The drone retrieves its direction via an odata service that has the following data requirements. An object contains an array for direction objects.
+The drone retrieves its direction via a public odata service without authenticaion that has the following data requirements. An object contains an array for direction objects.
 
 Direction Object:
  o step - Required, numeric value identifying the order of the command.
@@ -20,31 +21,26 @@ Direction Object:
 {
   "value": [
     {
-      "id": "0c316757-9aba-4028-bb27-488acc705519",
       "step": 1,
       "command": "takeoff",
       "parameters": null
     },
     {
-      "id": "32d56c13-2dc3-4fa0-b41c-d12752a10b67",
       "step": 2,
       "command": "delay",
       "parameters": null
     },
     {
-      "id": "4f1d0a17-f4c4-4dab-86f6-cabc2396e593",
       "step": 3,
       "command": "up",
       "parameters": "50"
     },
     {
-      "id": "a297a784-c482-44d8-9bce-231bb436cd06",
       "step": 4,
       "command": "delay",
       "parameters": null
     },
     {
-      "id": "06c649f2-5fe7-46dd-b76a-f114c515d574",
       "step": 5,
       "command": "land",
       "parameters": null
@@ -65,19 +61,37 @@ e.g.
 
 |Step|Command and Parameters|Description|Execution Time|
 |:--|:--|:--|:--|
-|1| takeoff |This can take some time for the drone to stabilize.|5s|
-|2| delay |Add an extra 5s delay.|10s|
-|3| forward 50 |Move the drone forward 50cm.|15s|
-|4| flip left |Flip the drone left|20s|
+|1| takeoff |This can take some time for the drone to stabilize.|0s|
+|2| delay |Add an extra 5s delay.|5s|
+|3| forward 50 |Move the drone forward 50cm.|10s|
+|4| flip l|Flip the drone left|15s|
 
+### Basic Commands
+|Command|Description|Example|
+|:--|:--|:--|
+|takeoff|drone takes off and stabilizes, this can take a few seconds|takeoff|
+|land|drone tries to land and find flat area|land|
+|up x|Go up x cm x=20-500|up 50|
+|down x|Go down x cm x=20-500|down 30|
+|forward x|Go forward x cm x=20-500|forward 30|
+|back x|Go back x cm x=20-500|back 50|
+|left x|Go left x cm x=20-500|left 30|
+|right x|Go right x cm x=20-500|right 20|
+|flip x|Flip the drone direction l=left r=right f=forward b=backward|flip l|
+|cw x|Rotate x degrees clockwise x=1-360|cw 90|
+|ccw x|Rotate x degrees counterclockwise x=1-360|ccw 90|
+|speed x|Set the speed in cm/s x=10-100 |speed 10|
+|stop|Hovers in the air, works anytime|stop|
 
-
+There are more advanced commands available in the [sdk](https://dl-cdn.ryzerobotics.com/downloads/Tello/Tello%20SDK%202.0%20User%20Guide.pdf), but not used for this exercise.
 
 ## Architecture
 
-The drone used is a Tello Drone that is safe to fly indoors and also includes an SDK.
+The drone used is a [Tello Drone](https://www.ryzerobotics.com/tello) that is safe to fly indoors and also includes an [SDK](https://dl-cdn.ryzerobotics.com/downloads/Tello/Tello%20SDK%202.0%20User%20Guide.pdf).
 
+Each drone is controlled by a [Raspberry Pi](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/) running [NodeRed](https://nodered.org/) in multiple docker containers.
 
+Each Raspberry Pi is connected to a router, that also allows the challengers to connect to and have their own playground.
 
 ## Tello Drone SDK
 
@@ -85,11 +99,8 @@ https://dl-cdn.ryzerobotics.com/downloads/Tello/Tello%20SDK%202.0%20User%20Guide
 
 ## NodeRed Docker
 
-
-
 ![example](images/nodered001.png)
 
-
-When running NodeRed in Docker, to access the local CAP application needs the hostname.
+When running NodeRed in Docker on a desktop, to access the local CAP application needs an accesible hostname.
 
 host.docker.internal
