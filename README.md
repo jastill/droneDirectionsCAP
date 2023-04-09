@@ -8,14 +8,16 @@ These are not normal athletes, they don't race to win, they race to flip, jump a
 
 Create the delivery map for the autonomous drone and land as close as possible to the finish area to get some gnarly applause. Extra points are earned for style!
 
-![example](images/nodered001.png)
 
+The drone retrieves its direction via an odata service that has the following data requirements. An object contains an array for direction objects.
 
-The drone retrieves its direction via an odata service that has the following data requirements:
+Direction Object:
+ o step - Required, numeric value identifying the order of the command.
+ o command - Required, the drone command to be issued 
+ o parameters - Optional, if the command requires parameters, they are passed here seperated by spaces.
 
 <pre>
 {
-  "@odata.context": "$metadata#guidance",
   "value": [
     {
       "id": "0c316757-9aba-4028-bb27-488acc705519",
@@ -51,12 +53,42 @@ The drone retrieves its direction via an odata service that has the following da
 }
 </pre>
 
+## Drone Commands
+
+The drone commands work on an open loop system, this means that there is no confirmation that a command was successful. The guidance must take this into account.
+
+If the drone is performing an existing operation and a new command is received, that command is ignored. This requires that delays must be used to factor in command execution times.
+
+Each command is sent rate limited to 5s, so to create a longer interval send a delay command without a parameter. The parameter is ignored by the drone controller if sent.
+
+e.g.
+
+|Step|Command and Parameters|Description|Execution Time|
+|:--|:--|:--|:--|
+|1| takeoff |This can take some time for the drone to stabilize.|5s|
+|2| delay |Add an extra 5s delay.|10s|
+|3| forward 50 |Move the drone forward 50cm.|15s|
+|4| flip left |Flip the drone left|20s|
+
+
+
+
+## Architecture
+
+The drone used is a Tello Drone that is safe to fly indoors and also includes an SDK.
+
+
 
 ## Tello Drone SDK
 
 https://dl-cdn.ryzerobotics.com/downloads/Tello/Tello%20SDK%202.0%20User%20Guide.pdf
 
 ## NodeRed Docker
+
+
+
+![example](images/nodered001.png)
+
 
 When running NodeRed in Docker, to access the local CAP application needs the hostname.
 
