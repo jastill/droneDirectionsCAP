@@ -1,12 +1,14 @@
 # Rescue Mission
 
-You have been tasked with delivering someemergency energy drinks to Crazy Adrenaline Games to fuel the athletes.
+You have been tasked with delivering some emergency energy drinks to Crazy Adrenaline Games to fuel the athletes.
 
 These are not normal athletes, they don't race to win, they race to flip, jump and get as much crazy air as they can.
 
 ## Your challenge
 
-Create the delivery map for the autonomous drone and land as close as possible to the finish area to get some gnarly applause. Extra points are earned for style!
+Create the delivery map for the autonomous drone via an oData service using your favorite SAP technology and land as close as possible to the finish area to get some gnarly applause. Extra points are earned for style!
+
+The service can run locally on your laptop (connected to the drone Wifi) or be deployed to the cloud.
 
 ### Operational values
 
@@ -64,7 +66,6 @@ e.g.
 |1| takeoff |This can take some time for the drone to stabilize.|0s|
 |2| delay |Add an extra 5s delay.|5s|
 |3| forward 50 |Move the drone forward 50cm.|10s|
-|4| flip l|Flip the drone left|15s|
 
 ### Basic Commands
 |Command|Description|Example|
@@ -77,7 +78,6 @@ e.g.
 |back x|Go back x cm x=20-500|back 50|
 |left x|Go left x cm x=20-500|left 30|
 |right x|Go right x cm x=20-500|right 20|
-|flip x|Flip the drone direction l=left r=right f=forward b=backward|flip l|
 |cw x|Rotate x degrees clockwise x=1-360|cw 90|
 |ccw x|Rotate x degrees counterclockwise x=1-360|ccw 90|
 |speed x|Set the speed in cm/s x=10-100 |speed 10|
@@ -96,6 +96,10 @@ Each Raspberry Pi is connected to a router, that also allows the challengers to 
 ## Tello Drone SDK
 
 https://dl-cdn.ryzerobotics.com/downloads/Tello/Tello%20SDK%202.0%20User%20Guide.pdf
+
+## Tello User manual
+
+https://dl-cdn.ryzerobotics.com/downloads/Tello/20180212/Tello+User+Manual+v1.0_EN_2.12.pdf
 
 ## NodeRed Docker
 
